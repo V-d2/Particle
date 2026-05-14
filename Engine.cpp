@@ -27,6 +27,14 @@ void Engine::input() {
 				std::cout << "the left button was pressed" << std::endl;
 				std::cout << "mouse x(pixel): " << event.mouseButton.x << std::endl;
 				std::cout << "mouse y(pixel): " << event.mouseButton.y << std::endl;
+				//Particle p(m_Window, 4, { (int)event.mouseButton.x, (int)event.mouseButton.y });
+				for (int i = 0; i < 5; i++)
+				{
+					Particle part(m_Window, rand() % 25 + 26  , { (int)event.mouseButton.x, (int)event.mouseButton.y });
+					
+					m_particles.push_back(part);
+				}
+
 			}
 		}
 	}
@@ -36,11 +44,15 @@ void Engine::input() {
 
 void Engine::update(float dtAsSeconds) {
 
+
 }
 
 
 void Engine::draw() {
-	 
+	m_Window.clear(Color::Black);
+	for(Particle particle : m_particles)
+	   m_Window.draw(particle);   // Calls your Particle::draw()
+	m_Window.display();
 }
 
 
@@ -49,6 +61,7 @@ Engine::Engine() {
 	int pixelHeight = VideoMode::getDesktopMode().height/2;
 	VideoMode vm(pixelWidth, pixelHeight);
 	m_Window.create(vm, "Particle Test", Style::Default);
+
 }
 
 // Run will call all the private functions
