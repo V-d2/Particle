@@ -28,9 +28,9 @@ void Engine::input() {
 				std::cout << "mouse x(pixel): " << event.mouseButton.x << std::endl;
 				std::cout << "mouse y(pixel): " << event.mouseButton.y << std::endl;
 				//Particle p(m_Window, 4, { (int)event.mouseButton.x, (int)event.mouseButton.y });
-				for (int i = 0; i < 5; i++)
+				for (int i = 0; i < 1; i++)
 				{
-					Particle part(m_Window, rand() % 25 + 26  , { (int)event.mouseButton.x, (int)event.mouseButton.y });
+					Particle part(m_Window, rand() % 10 + 5  , { (int)event.mouseButton.x, (int)event.mouseButton.y});
 					
 					m_particles.push_back(part);
 				}
@@ -54,7 +54,7 @@ void Engine::draw() {
 
 	// Loop through each Particle
 	for (Particle& particle : m_particles) {
-		m_Window.draw(particle);  // polymorphism: calls Particle::draw()
+		m_Window.draw(particle);  // polymorphism: calls Particle::draw() The RenderWindow m_Window has draw() fuction which dont do anythig, but instead call the draw from Drawable, which is the parent class of Particle, and then it calls the draw function from Particle.  This is how polymorphism works in C++.  The draw function from Particle is called because the type of the object is Particle, even though the type of the pointer is Drawable.
 	}
 	m_Window.display();  // show everything on screen
 }

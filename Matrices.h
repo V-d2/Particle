@@ -38,10 +38,10 @@ namespace Matrices
             ///************************************
         protected:
             ///changed to protected so sublasses can modify
-            vector<vector<double>> a;
+			vector<vector<double>> a; // 2D vector to hold matrix elements
         private:
-            int rows;
-            int cols;
+			int rows; //number of rows , should be 2 for , where 0 is x and 1 is y
+			int cols; //number of columns , should be equal to the number of points in the particle
     };
 
     ///Add each corresponding element.

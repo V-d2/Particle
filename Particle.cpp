@@ -19,9 +19,13 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 
     // Minimal: assign points in a line (unit test just checks 2xN matrix exists)
     for (int i = 0; i < m_numPoints; ++i) {
-        float angle = (2 * M_PI * i) / m_numPoints;
-        m_A(0, i) = 60.0f * cos(angle);  // x
-        m_A(1, i) = 60.0f * sin(angle);  // y
+        float angle = ( 2 * M_PI * i) / m_numPoints;
+		
+        //int radius = rand() % 100;  // radius of the circle
+        int radius = 100;  // radius of the circle
+
+        m_A(0, i) = radius * cos(angle);  // x
+        m_A(1, i) = radius * sin(angle);  // y
     }
 }
 
@@ -50,19 +54,18 @@ void Particle::translate(double xShift, double yShift) {
 
 
 void Particle::draw(RenderTarget& target, RenderStates states) const {
-    sf::VertexArray part(sf::TriangleFan, m_numPoints + 1);
+	sf::VertexArray Vertex_Array(sf::TriangleFan, m_numPoints + 1); // convert part to a VertexArray for drawing
 
     // Center vertex
-    part[0].position = m_centerCoordinate;
-    part[0].color = sf::Color::White;
-
+    Vertex_Array[0].position = m_centerCoordinate; // because we put the first vertex as snter, later do 
+    Vertex_Array[0].color = sf::Color::White;
     // Vertices from m_A matrix
     for (int i = 0; i < m_numPoints; ++i) {
-        part[i + 1].position = sf::Vector2f( m_centerCoordinate.x + m_A(0, i), m_centerCoordinate.y + m_A(1, i));
-        part[i + 1].color = sf::Color::Blue;
+        Vertex_Array[i + 1].position = sf::Vector2f( m_centerCoordinate.x + m_A(0, i), m_centerCoordinate.y + m_A(1, i));
+        Vertex_Array[i + 1].color = sf::Color::Blue;
     }
 
-    target.draw(part, states);  // draw vertex array
+    target.draw(Vertex_Array, states);  // draw vertex array
 }
 
 
