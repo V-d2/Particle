@@ -2,6 +2,35 @@
 
 void Engine::input() {
 
+	Event event;
+	while (m_Window.pollEvent(event))
+	{
+		if (event.type == Event::KeyPressed)
+		{
+			// Handle the player quitting
+			if (event.key.code == Keyboard::Escape)
+			{
+				m_Window.close();
+			}
+
+		}
+
+		if (event.type == Event::Closed)
+		{
+			m_Window.close();
+		}
+
+		if (event.type == Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				std::cout << "the left button was pressed" << std::endl;
+				std::cout << "mouse x(pixel): " << event.mouseButton.x << std::endl;
+				std::cout << "mouse y(pixel): " << event.mouseButton.y << std::endl;
+			}
+		}
+	}
+
 }
 
 
@@ -11,7 +40,7 @@ void Engine::update(float dtAsSeconds) {
 
 
 void Engine::draw() {
-
+	 
 }
 
 
@@ -24,22 +53,27 @@ Engine::Engine() {
 
 // Run will call all the private functions
 void Engine::run() {
-
-	Clock time;
 	
 	cout << "Starting Particle unit tests..." << endl;
 	Particle p(m_Window, 4, { (int)m_Window.getSize().x / 2, (int)m_Window.getSize().y / 2 });
 	p.unitTests();
 	cout << "Unit tests complete.  Starting engine..." << endl;
 
+	Clock clock;
+	
 
 	// Start the game loop
 	while (m_Window.isOpen())
 	{
+		Time time = clock.restart();
+		float dt = time.asSeconds();
+		
 		// Process events
 		input();
+		
 		// Update the state of the engine
-		update(1.0f / 60.0f);
+		update(dt);
+		
 		// Draw everything
 		draw();
 	}
