@@ -49,10 +49,14 @@ void Engine::update(float dtAsSeconds) {
 
 
 void Engine::draw() {
-	m_Window.clear(Color::Black);
-	for(Particle particle : m_particles)
-	   m_Window.draw(particle);   // Calls your Particle::draw()
-	m_Window.display();
+
+	m_Window.clear(sf::Color::Black);  // clear the window
+
+	// Loop through each Particle
+	for (Particle& particle : m_particles) {
+		m_Window.draw(particle);  // polymorphism: calls Particle::draw()
+	}
+	m_Window.display();  // show everything on screen
 }
 
 

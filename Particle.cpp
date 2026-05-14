@@ -2,16 +2,14 @@
 
 
 
-Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_numPoints(numPoints), m_A(2, numPoints){
-
-    // Map the particle to Cartesian origin
-    m_centerCoordinate = { 0.f, 0.f };
-
-    // Initialize TTL (time to live)
-    m_ttl = TTL;
+Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : 
+    m_numPoints(numPoints), m_A(2, numPoints), m_centerCoordinate(mouseClickPosition.x, mouseClickPosition.y), 
+    m_ttl(TTL) {
 
     m_cartesianPlane.setCenter(0, 0);
-    m_cartesianPlane.setSize(100, 100);
+    int pixelWidth = VideoMode::getDesktopMode().width;
+    int pixelHeight = VideoMode::getDesktopMode().height;
+    m_cartesianPlane.setSize(pixelWidth, -pixelHeight);
 
 	m_color1 = Color::Red;
     m_color2 = Color::Blue;
@@ -20,10 +18,10 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 	m_radiansPerSec = M_PI / 4.0; // 45 degrees per second
 
     // Minimal: assign points in a line (unit test just checks 2xN matrix exists)
-    for (int i = 0; i < m_numPoints; i++)
-    {
-        m_A(0, i) = i; // x-coordinate
-        m_A(1, i) = i; // y-coordinate
+    for (int i = 0; i < m_numPoints; ++i) {
+        float angle = (2 * M_PI * i) / m_numPoints;
+        m_A(0, i) = 10.0f * cos(angle) + rand() % 25;  // x
+        m_A(1, i) = 10.0f * sin(angle) + rand() % 25;  // y
     }
 }
 
@@ -52,21 +50,22 @@ void Particle::translate(double xShift, double yShift) {
 
 
 void Particle::draw(RenderTarget& target, RenderStates states) const {
-    // Minimal placeholder to pass unit tests
-    VertexArray particle1(TriangleFan);
-    particle1.resize(m_numPoints + 1);
+    sf::VertexArray va(sf::TriangleFan, m_numPoints + 1);
 
-    // center vertex
-    particle1[0].position = Vector2f(m_centerCoordinate.x, m_centerCoordinate.y);
-    particle1[0].color = Color::White;
+    // Center vertex
+    va[0].position = m_centerCoordinate;
+    va[0].color = sf::Color::White;
 
-    // vertices from m_A
-    for (int i = 0; i < m_numPoints; i++) {
-        particle1[i + 1].position = Vector2f(m_A(0, i), m_A(1, i));
-        particle1[i + 1].color = Color::Blue;
+    // Vertices from m_A matrix
+    for (int i = 0; i < m_numPoints; ++i) {
+        va[i + 1].position = sf::Vector2f(
+            m_centerCoordinate.x + m_A(0, i),
+            m_centerCoordinate.y + m_A(1, i)
+        );
+        va[i + 1].color = sf::Color::Blue;
     }
 
-    target.draw(particle1, states);
+    target.draw(va, states);  // draw vertex array
 }
 
 
