@@ -15,7 +15,8 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_color2 = Color::Blue;
 	m_vx = 0;
 	m_vy = 0;
-	m_radiansPerSec = M_PI / 4.0; // 45 degrees per second
+	m_radiansPerSec = rand()/(float)RAND_MAX * M_PI; // 180 degrees per second
+	cout << "Initial radians per second: " << m_radiansPerSec << endl;
 
     // Minimal: assign points in a line (unit test just checks 2xN matrix exists)
     for (int i = 0; i < m_numPoints; ++i) {
