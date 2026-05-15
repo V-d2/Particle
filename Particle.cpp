@@ -24,7 +24,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
         //int radius = rand() % 100;  // radius of the circle
         int radius = 100;  // radius of the circle
 
-        m_A(0, i) = radius * cos(angle);  // x
+        m_A(0, i) = radius * cos(angle);  // x    
         m_A(1, i) = radius * sin(angle);  // y
     }
 }
@@ -52,6 +52,13 @@ void Particle::translate(double xShift, double yShift) {
     m_A = T + m_A;
 }
 
+
+/*
+m_Window.draw(particle)
+->RenderTarget::draw(const Drawable& drawable)
+->drawable.draw(*this, states)  // virtual call
+-> Particle::draw(RenderTarget& target, RenderStates states)
+*/
 
 void Particle::draw(RenderTarget& target, RenderStates states) const {
 	sf::VertexArray Vertex_Array(sf::TriangleFan, m_numPoints + 1); // convert part to a VertexArray for drawing
