@@ -22,7 +22,10 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     for (int i = 0; i < m_numPoints; ++i) {
         float angle = ( 2 * M_PI * i) / m_numPoints;
 		
-        //int radius = rand() % 100;  // radius of the circle
+        //int radius = rand() % 100;  // radius of
+        // 
+        // 
+        // the circle
         int radius = 100;  // radius of the circle
 
         m_A(0, i) = radius * cos(angle);  // x    
