@@ -18,26 +18,26 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     cout << "converted coordinates x:" << m_centerCoordinate.x << "y: " << m_centerCoordinate.y << endl;
 
 
-	m_color1 = Color::Red;
+	m_color1 = Color::White;
     m_color2 = Color::Blue;
     m_vx = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // initial velocity
-	m_vy = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // i
+	m_vy = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // 
 	m_radiansPerSec = (rand() / (float)(RAND_MAX) * 2 - 1) * M_PI; // 180 degrees per second both sides. to make it negative or positive. (rand() / (float)(RAND_MAX) * 2)  give  0.0 to 2.0 a float. so if -1 the we get  -1.0 to 1.0 random persentage
 	cout << "Initial radians per second: " << m_radiansPerSec << endl;
 
+    float theta = M_PI / 4;
+    float dTheta = (2 * M_PI) / (m_numPoints - 1);
 
-    // Minimal: assign points in a line (unit test just checks 2xN matrix exists)
-    for (int i = 0; i < m_numPoints; ++i) {
-        float angle = ( 2 * M_PI * i) / m_numPoints;
-		
-        //int radius = rand() % 100;  // radius of
-        // 
-        // 
-        // the circle
-        int radius = 100;  // radius of the circle
-
-        m_A(0, i) = radius * cos(angle);  // x      m_A(0, x) this is for all x   m_A(0, 0) is the center for x
-        m_A(1, i) = radius * sin(angle);  // y      m_A(1, y) this is for all y   m_A(0, 1) is the center for y
+    for (size_t j = 0; j < m_numPoints - 1; j++) { // dont assign the last point, because it assigned with the first itration, so radius is same, and so points of first and last of Matrix coinsides
+        size_t  r = rand() % 101 + 20;
+        int  dx = r * cos(theta + j * dTheta);
+        int  dy = r * sin(theta + j * dTheta);
+        m_A(0, j) = m_centerCoordinate.x + dx;
+        m_A(1, j) = m_centerCoordinate.y + dy;
+        if (j == 0) {  // this is to assign the first poit with the last  poit, so the points coincide
+            m_A(0, m_numPoints - 1) = m_centerCoordinate.x + dx;
+            m_A(1, m_numPoints - 1) = m_centerCoordinate.y + dy;
+        }
     }
 }
 
@@ -73,24 +73,28 @@ m_Window.draw(particle)
 */
 
 void Particle::draw(RenderTarget& target, RenderStates states) const {
-	sf::VertexArray Vertex_Array(sf::TriangleFan, m_numPoints + 1); // convert part to a VertexArray for drawing
+	sf::VertexArray lines(sf::TriangleFan, m_numPoints + 1); // convert part to a VertexArray for drawing/ + 1 because plus the center 
+    Vector2f center = (Vector2f)target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane);
 
-    // Center vertex
-    Vertex_Array[0].position = m_centerCoordinate; // because we put the first vertex as snter, later do 
-    Vertex_Array[0].color = sf::Color::White;
-    // Vertices from m_A matrix
-    for (int i = 0; i < m_numPoints; ++i) {
-        Vertex_Array[i + 1].position = sf::Vector2f( m_centerCoordinate.x + m_A(0, i), m_centerCoordinate.y + m_A(1, i));
-        Vertex_Array[i + 1].color = sf::Color::Blue;
+    lines[0].position = center;
+    lines[0].color = m_color1;
+
+    for (size_t j = 1; j <= m_numPoints; j++) {
+        lines[j].position = (Vector2f)target.mapCoordsToPixel( Vector2f (m_A(0, j-1), m_A(1, j-1)), m_cartesianPlane);
+        lines[j].color = m_color2;
     }
-
-    target.setView(m_cartesianPlane); // to test it if particles show up on proper position
-
-    target.draw(Vertex_Array, states);  // draw vertex array
+    target.draw(lines, states);  // draw vertex array
 }
 
 
+void Particle::update(float dt) {
+    m_ttl =- dt;
+    rotate(dt * m_radiansPerSec);
+    scale(SCALE);
+    float dx = m_vx * dt; // determiane the distance per frame
+    float dy = (m_vy - G * dt) * dt;
 
+}
 
 
 bool Particle::almostEqual(double a, double b, double eps)

@@ -30,7 +30,8 @@ void Engine::input() {
 				//Particle p(m_Window, 4, { (int)event.mouseButton.x, (int)event.mouseButton.y });
 				for (int i = 0; i < 1; i++)
 				{
-					Particle part(m_Window, rand() % 10 + 5  , { (int)event.mouseButton.x, (int)event.mouseButton.y});
+					Particle part(m_Window, rand() % 64 + 5  , { (int)event.mouseButton.x, (int)event.mouseButton.y});
+					//Particle part(m_Window, 4, { (int)event.mouseButton.x, (int)event.mouseButton.y });
 					
 					m_particles.push_back(part);
 				}
