@@ -6,17 +6,20 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_numPoints(numPoints), m_A(2, numPoints), m_centerCoordinate(mouseClickPosition.x, mouseClickPosition.y), 
     m_ttl(TTL) {
 
-    m_cartesianPlane.setCenter(0, 0);
-    int pixelWidth = VideoMode::getDesktopMode().width;
-    int pixelHeight = VideoMode::getDesktopMode().height;
-    m_cartesianPlane.setSize(pixelWidth, -pixelHeight);
+
+
+    m_cartesianPlane.setCenter(0, 0); // view object
+    //int pixelWidth = VideoMode::getDesktopMode().width;
+    //int pixelHeight = VideoMode::getDesktopMode().height;
+    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y); // viw object
 
 	m_color1 = Color::Red;
     m_color2 = Color::Blue;
 	m_vx = 0;
 	m_vy = 0;
-	m_radiansPerSec = (rand() / (float)(RAND_MAX) * 2 - 1) * M_PI; // 180 degrees per second both sides. to make it negative or positive.
+	m_radiansPerSec = (rand() / (float)(RAND_MAX) * 2 - 1) * M_PI; // 180 degrees per second both sides. to make it negative or positive. (rand() / (float)(RAND_MAX) * 2)  give  0.0 to 2.0 a float. so if -1 the we get  -1.0 to 1.0 random persentage
 	cout << "Initial radians per second: " << m_radiansPerSec << endl;
+
 
     // Minimal: assign points in a line (unit test just checks 2xN matrix exists)
     for (int i = 0; i < m_numPoints; ++i) {
@@ -28,8 +31,8 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
         // the circle
         int radius = 100;  // radius of the circle
 
-        m_A(0, i) = radius * cos(angle);  // x    
-        m_A(1, i) = radius * sin(angle);  // y
+        m_A(0, i) = radius * cos(angle);  // x      m_A(0, x) this is for all x   m_A(0, 0) is the center for x
+        m_A(1, i) = radius * sin(angle);  // y      m_A(1, y) this is for all y   m_A(0, 1) is the center for y
     }
 }
 
