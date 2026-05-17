@@ -16,13 +16,12 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane); // it converts the display coordinates to cartesian plane coordinate, and save it to m_centerCoordinate to represent the position of particle on the m_cartesianPlane
     cout << "converted coordinates x:" << m_centerCoordinate.x << "y: " << m_centerCoordinate.y << endl;
-    target.setView(m_cartesianPlane); // to test it if particles show up on proper position
 
 
 	m_color1 = Color::Red;
     m_color2 = Color::Blue;
-    m_vx = (rand() % 501 + 100) * ((rand() % 2) ? -1 : 1); // initial velocity
-	m_vy = (rand() % 501 + 100) * ((rand() % 2) ? -1 : 1);
+    m_vx = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // initial velocity
+	m_vy = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // i
 	m_radiansPerSec = (rand() / (float)(RAND_MAX) * 2 - 1) * M_PI; // 180 degrees per second both sides. to make it negative or positive. (rand() / (float)(RAND_MAX) * 2)  give  0.0 to 2.0 a float. so if -1 the we get  -1.0 to 1.0 random persentage
 	cout << "Initial radians per second: " << m_radiansPerSec << endl;
 
@@ -84,6 +83,8 @@ void Particle::draw(RenderTarget& target, RenderStates states) const {
         Vertex_Array[i + 1].position = sf::Vector2f( m_centerCoordinate.x + m_A(0, i), m_centerCoordinate.y + m_A(1, i));
         Vertex_Array[i + 1].color = sf::Color::Blue;
     }
+
+    target.setView(m_cartesianPlane); // to test it if particles show up on proper position
 
     target.draw(Vertex_Array, states);  // draw vertex array
 }
