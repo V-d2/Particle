@@ -3,20 +3,26 @@
 
 
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : 
-    m_numPoints(numPoints), m_A(2, numPoints), m_centerCoordinate(mouseClickPosition.x, mouseClickPosition.y), 
-    m_ttl(TTL) {
+    m_numPoints(numPoints), m_A(2, numPoints), m_ttl(TTL) {
 
+    //m_centerCoordinate(mouseClickPosition.x, mouseClickPosition.y);
+    
 
 
     m_cartesianPlane.setCenter(0, 0); // view object
     //int pixelWidth = VideoMode::getDesktopMode().width;
     //int pixelHeight = VideoMode::getDesktopMode().height;
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y); // viw object
+    
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane); // it converts the display coordinates to cartesian plane coordinate, and save it to m_centerCoordinate to represent the position of particle on the m_cartesianPlane
+    cout << "converted coordinates x:" << m_centerCoordinate.x << "y: " << m_centerCoordinate.y << endl;
+    target.setView(m_cartesianPlane); // to test it if particles show up on proper position
+
 
 	m_color1 = Color::Red;
     m_color2 = Color::Blue;
-	m_vx = 0;
-	m_vy = 0;
+    m_vx = (rand() % 501 + 100) * ((rand() % 2) ? -1 : 1); // initial velocity
+	m_vy = (rand() % 501 + 100) * ((rand() % 2) ? -1 : 1);
 	m_radiansPerSec = (rand() / (float)(RAND_MAX) * 2 - 1) * M_PI; // 180 degrees per second both sides. to make it negative or positive. (rand() / (float)(RAND_MAX) * 2)  give  0.0 to 2.0 a float. so if -1 the we get  -1.0 to 1.0 random persentage
 	cout << "Initial radians per second: " << m_radiansPerSec << endl;
 
