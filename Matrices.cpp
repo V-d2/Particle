@@ -55,7 +55,7 @@ namespace Matrices {
 
         Matrix temp(a.getRows(), a.getCols()); // temporary Matrix, because parameters are const
         if (a.getRows() != b.getRows() && a.getCols() != b.getCols()) {
-            temp = a;
+            temp = a; // in case matrix difrent, return the same left matrix
         }
         else {
            
@@ -72,10 +72,22 @@ namespace Matrices {
     // Matrix multiplication
     Matrix operator*(const Matrix& a, const Matrix& b) {   
         if (a.getCols() != b.getRows()) {
-            std::cerr << "Matrix dimensions do not match for multiplication!" << std::endl;
-            exit(1);
+            cout << "Matrix dimension dont match" << std::endl;
+            return a; // if are difrent, return the same same left matrix
         }
         Matrix result(a.getRows(), b.getCols());
+        
+        for (int i = 0; i < a.getRows(); i++) {
+            for (int j = 0; j < b.getCols(); j++) {
+                for (int k = 0; k < a.getCols(); k++){
+                    result(i, j) += a(i, k) * b(k, j);
+                }
+                //result(i, j) = a(i, 0) * b(0, j) + a(i, 1) * b(1, j);
+            }
+        }
+
+
+        /*
         for (int i = 0; i < a.getRows(); ++i) {
             for (int j = 0; j < b.getCols(); ++j) {
                 result(i, j) = 0;
@@ -84,15 +96,27 @@ namespace Matrices {
                 }
             }
         }
+        */
         return result;  
     }
 
     // Matrix comparison (optional for unit test)
-    bool operator==(const Matrix& m1, const Matrix& m2) { 
-         return false; 
+    bool operator==(const Matrix& a, const Matrix& b) { 
+        bool ret = false;
+        if (a.getRows() == b.getRows() && a.getCols() == b.getCols()) {
+            bool ret = true;
+        }
+        return ret;
     }
-    bool operator!=(const Matrix& m1, const Matrix& m2) { 
-         return true; 
+ 
+
+
+    bool operator!=(const Matrix& a, const Matrix& b) { 
+        bool ret = true;
+        if (a.getRows() != b.getRows() && a.getCols() != b.getCols()) {
+            bool ret = false;
+        }
+        return ret;
     }
 
 }
