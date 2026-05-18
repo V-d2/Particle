@@ -9,10 +9,10 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     
 
 
-    m_cartesianPlane.setCenter(0, 0); // view object
+    m_cartesianPlane.setCenter(0, 0);
     //int pixelWidth = VideoMode::getDesktopMode().width;
     //int pixelHeight = VideoMode::getDesktopMode().height;
-    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y); // viw object
+    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
     
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane); // it converts the display coordinates to cartesian plane coordinate, and save it to m_centerCoordinate to represent the position of particle on the m_cartesianPlane
     cout << "converted coordinates x:" << m_centerCoordinate.x << "y: " << m_centerCoordinate.y << endl;
@@ -46,22 +46,33 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 ///rotate Particle by theta radians counter-clockwise
 ///construct a RotationMatrix R, left mulitply it to m_A
 void Particle::rotate(double theta) {
-    RotationMatrix R(theta);  // local rotation matrix
-    m_A = R * m_A;             // apply rotation
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y); // translate the particle to origin
+    RotationMatrix R(theta);
+    m_A = R * m_A;
+    translate(temp.x, temp.y); // translate the particle back
+
+    //RotationMatrix R(theta);  // local rotation matrix
+    //m_A = R * m_A;             // apply rotation
 }
 
 ///Scale the size of the Particle by factor c
 ///construct a ScalingMatrix S, left multiply it to m_A
 void Particle::scale(double c) {
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
     ScalingMatrix S(c);
     m_A = S * m_A;
+    translate(temp.x, temp.y);
 }
 
 ///shift the Particle by (xShift, yShift) coordinates
 ///construct a TranslationMatrix T, add it to m_A
 void Particle::translate(double xShift, double yShift) {
     TranslationMatrix T(xShift, yShift, m_numPoints);
-    m_A = T + m_A;
+    m_A = T + m_A;  // add the the xShift and yShift in every Matrix m_A.x and m_A.y
+    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.x += xShift;
 }
 
 
@@ -72,19 +83,22 @@ m_Window.draw(particle)
 -> Particle::draw(RenderTarget& target, RenderStates states)
 */
 
+
 void Particle::draw(RenderTarget& target, RenderStates states) const {
 	sf::VertexArray lines(sf::TriangleFan, m_numPoints + 1); // convert part to a VertexArray for drawing/ + 1 because plus the center 
+    
     Vector2f center = (Vector2f)target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane);
-
     lines[0].position = center;
     lines[0].color = m_color1;
 
     for (size_t j = 1; j <= m_numPoints; j++) {
         lines[j].position = (Vector2f)target.mapCoordsToPixel( Vector2f (m_A(0, j-1), m_A(1, j-1)), m_cartesianPlane);
+        //lines[j].position = Vector2f(m_A(0, j - 1), m_A(1, j - 1));
         lines[j].color = m_color2;
     }
     target.draw(lines, states);  // draw vertex array
 }
+
 
 
 void Particle::update(float dt) {
@@ -92,8 +106,8 @@ void Particle::update(float dt) {
     rotate(dt * m_radiansPerSec);
     scale(SCALE);
     float dx = m_vx * dt; // determiane the distance per frame
-    float dy = (m_vy - G * dt) * dt;
-
+    float dy = (m_vy - G * dt) * dt; // accelerating chang position
+    translate(dx, dy);
 }
 
 

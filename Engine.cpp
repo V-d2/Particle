@@ -1,7 +1,7 @@
 #include "Engine.h"
 
 void Engine::input() {
-
+	
 	Event event;
 	while (m_Window.pollEvent(event))
 	{
@@ -85,7 +85,7 @@ void Engine::run() {
 	{
 		Time time = clock.restart();
 		float dt = time.asSeconds();
-		cout << "show td: " << dt << endl;
+		//cout << "show td: " << dt << endl;
 		
 		// Process events
 		input();
