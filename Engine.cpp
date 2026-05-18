@@ -44,8 +44,10 @@ void Engine::input() {
 
 
 void Engine::update(float dtAsSeconds) {
-
-
+	for (Particle& particle : m_particles)
+	{
+		particle.update(dtAsSeconds);
+	}
 }
 
 
