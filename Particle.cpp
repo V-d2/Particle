@@ -18,8 +18,12 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     cout << "converted coordinates x:" << m_centerCoordinate.x << "y: " << m_centerCoordinate.y << endl;
 
 
-	m_color1 = Color::White;
-    m_color2 = Color::Blue;
+	//m_color1 = Color::White;
+    //m_color2 = Color::Blue;
+    
+    m_color1 = Color(rand() % 256, rand() % 256, rand() % 256);
+    m_color2 = Color(rand() % 256, rand() % 256, rand() % 256);
+
     m_vx = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // initial velocity
 	m_vy = (rand() % 501 + 100) * ((rand() % 2) ? -1.0 : 1.0); // 
 	m_radiansPerSec = (rand() / (float)(RAND_MAX) * 2 - 1) * M_PI; // 180 degrees per second both sides. to make it negative or positive. (rand() / (float)(RAND_MAX) * 2)  give  0.0 to 2.0 a float. so if -1 the we get  -1.0 to 1.0 random persentage

@@ -39,7 +39,6 @@ void Engine::input() {
 			}
 		}
 	}
-
 }
 
 
@@ -51,7 +50,7 @@ void Engine::update(float dtAsSeconds) {
 	for (int i = 0; i < m_particles.size(); i++) {
 		if (m_particles[i].getTTL() <= 0.0) {
 			m_particles.erase(m_particles.begin() + i);
-			cout << "Particle removed, remain particles are:" << m_particles.size() << endl;
+			cout << "Particle removed, remain particles:" << m_particles.size() << endl;
 		}
 	}
 	

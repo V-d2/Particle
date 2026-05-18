@@ -89,12 +89,10 @@ namespace Matrices {
 
     // Matrix comparison (optional for unit test)
     bool operator==(const Matrix& m1, const Matrix& m2) { 
-        cout << " == " << endl;
-           return false; 
+         return false; 
     }
     bool operator!=(const Matrix& m1, const Matrix& m2) { 
-        cout << " != " << endl;
-        return true; 
+         return true; 
     }
 
 }
