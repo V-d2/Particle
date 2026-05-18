@@ -49,7 +49,7 @@ void Particle::rotate(double theta) {
     Vector2f temp = m_centerCoordinate;
     translate(-m_centerCoordinate.x, -m_centerCoordinate.y); // translate the particle to origin
     RotationMatrix R(theta);
-    m_A = R * m_A;
+    m_A = R * m_A; // the R here represent the rotate matrix 2x2, which used to rotate the vertices
     translate(temp.x, temp.y); // translate the particle back
 
     //RotationMatrix R(theta);  // local rotation matrix
@@ -72,7 +72,7 @@ void Particle::translate(double xShift, double yShift) {
     TranslationMatrix T(xShift, yShift, m_numPoints);
     m_A = T + m_A;  // add the the xShift and yShift in every Matrix m_A.x and m_A.y
     m_centerCoordinate.x += xShift;
-    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.y += yShift;
 }
 
 
@@ -102,7 +102,7 @@ void Particle::draw(RenderTarget& target, RenderStates states) const {
 
 
 void Particle::update(float dt) {
-    m_ttl =- dt;
+    m_ttl -= dt;
     rotate(dt * m_radiansPerSec);
     scale(SCALE);
     float dx = m_vx * dt; // determiane the distance per frame
