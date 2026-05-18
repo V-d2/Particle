@@ -106,7 +106,8 @@ void Particle::update(float dt) {
     rotate(dt * m_radiansPerSec);
     scale(SCALE);
     float dx = m_vx * dt; // determiane the distance per frame
-    float dy = (m_vy - G * dt) * dt; // accelerating chang position
+    m_vy -= G * dt;
+    float dy = m_vy * dt; // accelerating the down speed and shift farther to the y down
     translate(dx, dy);
 }
 

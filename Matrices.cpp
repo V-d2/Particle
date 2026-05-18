@@ -22,13 +22,27 @@ namespace Matrices {
         a[1][1] = cos(theta);
     }
 
-    // ScalingMatrix constructor
+    ///Call the parent constructor to create a 2x2 matrix
+            ///Then assign each element as follows:
+            /*
+            scale   0
+            0       scale
+            */
+            ///scale represents the size multiplier
     ScalingMatrix::ScalingMatrix(double scale) : Matrix(2, 2) {
         a[0][0] = scale; a[0][1] = 0;
         a[1][0] = 0;     a[1][1] = scale;
     }
 
-    // TranslationMatrix constructor
+    ///Call the parent constructor to create a 2xn matrix
+            ///Then assign each element as follows:
+            /*
+            xShift  xShift  xShift  ...
+            yShift  yShift  yShift  ...
+            */
+            ///paramaters are xShift, yShift, and nCols
+            ///nCols represents the number of columns in the matrix
+            ///where each column contains one (x,y) coordinate pair
     TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2, nCols) {
         for (int i = 0; i < nCols; ++i) {
             a[0][i] = xShift;
@@ -38,13 +52,21 @@ namespace Matrices {
 
     // Matrix addition
     Matrix operator+(const Matrix& a, const Matrix& b) {
-        Matrix result(a.getRows(), a.getCols());
-        for (int i = 0; i < a.getRows(); ++i) {
-            for (int j = 0; j < a.getCols(); ++j) {
-                result(i, j) = a(i, j) + b(i, j);
+
+        Matrix temp(a.getRows(), a.getCols()); // temporary Matrix, because parameters are const
+        if (a.getRows() != b.getRows() && a.getCols() != b.getCols()) {
+            temp = a;
+        }
+        else {
+           
+            for (int i = 0; i < a.getRows(); ++i) {
+                for (int j = 0; j < a.getCols(); ++j) {
+                    temp(i, j) = a(i, j) + b(i, j); // here is used const double& operator()(int i, int j) const{ return a.at(i).at(j); }
+
+                }
             }
         }
-        return result;
+        return temp;
     }
 
     // Matrix multiplication
@@ -67,9 +89,11 @@ namespace Matrices {
 
     // Matrix comparison (optional for unit test)
     bool operator==(const Matrix& m1, const Matrix& m2) { 
+        cout << " == " << endl;
            return false; 
     }
     bool operator!=(const Matrix& m1, const Matrix& m2) { 
+        cout << " != " << endl;
         return true; 
     }
 
