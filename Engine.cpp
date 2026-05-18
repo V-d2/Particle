@@ -78,7 +78,6 @@ void Engine::run() {
 	cout << "Unit tests complete.  Starting engine..." << endl;
 
 	Clock clock;
-	
 
 	// Start the game loop
 	while (m_Window.isOpen())
