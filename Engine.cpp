@@ -85,6 +85,7 @@ void Engine::run() {
 	{
 		Time time = clock.restart();
 		float dt = time.asSeconds();
+		cout << "show td: " << dt << endl;
 		
 		// Process events
 		input();
