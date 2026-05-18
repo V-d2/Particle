@@ -28,7 +28,7 @@ void Engine::input() {
 				std::cout << "mouse x(pixel): " << event.mouseButton.x << std::endl;
 				std::cout << "mouse y(pixel): " << event.mouseButton.y << std::endl;
 				//Particle p(m_Window, 4, { (int)event.mouseButton.x, (int)event.mouseButton.y });
-				for (int i = 0; i < 1; i++)
+				for (int i = 0; i < 5; i++)
 				{
 					Particle part(m_Window, rand() % 64 + 5  , { (int)event.mouseButton.x, (int)event.mouseButton.y});
 					//Particle part(m_Window, 4, { (int)event.mouseButton.x, (int)event.mouseButton.y });
@@ -48,6 +48,13 @@ void Engine::update(float dtAsSeconds) {
 	{
 		particle.update(dtAsSeconds);
 	}
+	for (int i = 0; i < m_particles.size(); i++) {
+		if (m_particles[i].getTTL() <= 0.0) {
+			m_particles.erase(m_particles.begin() + i);
+			cout << "Particle removed, remain particles are:" << m_particles.size() << endl;
+		}
+	}
+	
 }
 
 
